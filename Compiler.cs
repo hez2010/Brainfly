@@ -134,7 +134,7 @@ class Compiler
                 Output => typeof(OutputData<>).MakeGenericType(code),
                 Input => typeof(InputData<>).MakeGenericType(code),
                 LoopBody loop => typeof(Loop<,>).MakeGenericType(Emit(loop.Body), code),
-                _ => throw new InvalidOperationException("Illegal instruction."),
+                _ => throw new InvalidProgramException("Illegal instruction."),
             };
         }
 
