@@ -82,14 +82,15 @@ switch (args[0])
             {
                 program = Compiler.Compile(await File.ReadAllTextAsync(args[2]));
             }
+            Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;
-            await using var output = new MemoryStream();
-            await using var input = new MemoryStream();
+            await using var output = Console.OpenStandardOutput();
+            await using var input = Console.OpenStandardInput();
             var memory = memorySize <= 128 ? stackalloc byte[128] : new byte[memorySize];
             var sw = Stopwatch.StartNew();
             var execTimeControl = Stopwatch.StartNew();
             var execTime = new List<double>();
-            Console.WriteLine("Warming up...");
+            Console.Error.WriteLine("Warming up...");
             var count = 0;
             do
             {
@@ -98,11 +99,9 @@ switch (args[0])
                 execTime.Add(sw.Elapsed.TotalNanoseconds);
                 Thread.Sleep(10);
                 memory.Clear();
-                output.Position = 0;
-                output.SetLength(0);
             } while (++count < 10 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || (HasAnyOutlier(execTime[^5..]) && execTimeControl.Elapsed < TimeSpan.FromSeconds(60)));
             execTime.Clear();
-            Console.WriteLine("Benchmarking...");
+            Console.Error.WriteLine("Benchmarking...");
             execTimeControl.Restart();
             count = 0;
             do
@@ -111,17 +110,15 @@ switch (args[0])
                 program.Run(memory, input, output);
                 execTime.Add(sw.Elapsed.TotalNanoseconds);
                 memory.Clear();
-                output.Position = 0;
-                output.SetLength(0);
             } while (++count < 10 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || (HasAnyOutlier(execTime[^5..]) && execTimeControl.Elapsed < TimeSpan.FromSeconds(60)));
-            Console.WriteLine($"Executed {execTime.Count} ops");
+            Console.Error.WriteLine($"Executed {execTime.Count} ops");
             RemoveOutliers(execTime);
             var min = ToFriendlyTime(execTime.Min());
-            Console.WriteLine($"Min: {min.Value} {min.Unit}");
+            Console.Error.WriteLine($"Min: {min.Value} {min.Unit}");
             var mean = ToFriendlyTime(execTime.Average());
-            Console.WriteLine($"Mean: {mean.Value} {mean.Unit}");
+            Console.Error.WriteLine($"Mean: {mean.Value} {mean.Unit}");
             var stdDev = ToFriendlyTime(StdDev(execTime));
-            Console.WriteLine($"StdDev: {stdDev.Value} {stdDev.Unit}");
+            Console.Error.WriteLine($"StdDev: {stdDev.Value} {stdDev.Unit}");
         }
         break;
     default:
