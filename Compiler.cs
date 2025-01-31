@@ -165,10 +165,10 @@ class Executable
 
     public override string? ToString()
     {
-        return GetTypeName(_code);
+        return ToString(_code);
     }
 
-    private static string GetTypeName(Type t)
+    private static string ToString(Type t)
     {
         if (!t.IsGenericType) return t.Name;
         if (t.IsAssignableTo(typeof(INum))) return GetNumValue(t);
@@ -178,7 +178,7 @@ class Executable
         foreach (var arg in t.GetGenericArguments())
         {
             if (cnt > 0) sb.Append(", ");
-            sb.Append(GetTypeName(arg));
+            sb.Append(ToString(arg));
             cnt++;
         }
         return sb.Append('>').ToString();
