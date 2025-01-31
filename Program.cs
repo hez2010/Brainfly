@@ -15,28 +15,46 @@ switch (args[0])
         {
             var program = Compiler.Compile(await File.ReadAllTextAsync(args[1]));
             using var compressor = new Compressor();
-            await File.WriteAllBytesAsync(Path.GetFileNameWithoutExtension(args[1]) + ".o", compressor.Wrap(Encoding.UTF8.GetBytes(program.Code.ToString())).ToArray());
+            await File.WriteAllBytesAsync(Path.GetFileNameWithoutExtension(args[1]) + ".bfo", compressor.Wrap(Encoding.UTF8.GetBytes(program.Code.ToString())).ToArray());
         }
         break;
     case "run":
         {
             var memorySize = int.Parse(args[1]);
-            using var decompressor = new Decompressor();
-            var program = new Executable(Type.GetType(Encoding.UTF8.GetString(decompressor.Unwrap(await File.ReadAllBytesAsync(args[2]))))!);
+            var extName = Path.GetExtension(args[2]);
+            Executable program;
+            if (string.Equals(extName, ".bfo", StringComparison.OrdinalIgnoreCase))
+            {
+                using var decompressor = new Decompressor();
+                program = new Executable(Type.GetType(Encoding.UTF8.GetString(decompressor.Unwrap(await File.ReadAllBytesAsync(args[2]))))!);
+            }
+            else
+            {
+                program = Compiler.Compile(await File.ReadAllTextAsync(args[2]));
+            }
             Console.OutputEncoding = Encoding.UTF8;
-            var output = Console.OpenStandardOutput();
-            var input = Console.OpenStandardInput();
+            await using var output = Console.OpenStandardOutput();
+            await using var input = Console.OpenStandardInput();
             var memory = memorySize < 128 ? stackalloc byte[128] : new byte[memorySize];
             return program.Run(memory, input, output);
         }
     case "bench":
         {
             var memorySize = int.Parse(args[1]);
-            using var decompressor = new Decompressor();
-            var program = new Executable(Type.GetType(Encoding.UTF8.GetString(decompressor.Unwrap(await File.ReadAllBytesAsync(args[2]))))!);
+            var extName = Path.GetExtension(args[2]);
+            Executable program;
+            if (string.Equals(extName, ".bfo", StringComparison.OrdinalIgnoreCase))
+            {
+                using var decompressor = new Decompressor();
+                program = new Executable(Type.GetType(Encoding.UTF8.GetString(decompressor.Unwrap(await File.ReadAllBytesAsync(args[2]))))!);
+            }
+            else
+            {
+                program = Compiler.Compile(await File.ReadAllTextAsync(args[2]));
+            }
             Console.OutputEncoding = Encoding.UTF8;
-            var output = new MemoryStream();
-            var input = Console.OpenStandardInput();
+            await using var output = new MemoryStream();
+            await using var input = new MemoryStream();
             var memory = memorySize < 128 ? stackalloc byte[128] : new byte[memorySize];
             var sw = Stopwatch.StartNew();
             var execTime = new List<long>();
