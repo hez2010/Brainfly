@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text;
 using static Brainfly.Compiler.Instruction;
 
@@ -158,6 +159,7 @@ class Executable
         _code = code;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public int Run(Span<byte> memory, Stream input, Stream output)
     {
         return Entrypoint(0, memory, input, output);

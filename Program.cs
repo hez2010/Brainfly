@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Text;
 using Brainfly;
 using ZstdSharp;
@@ -69,6 +68,7 @@ switch (args[0])
                 sw.Restart();
                 program.Run(memory, input, output);
                 execTime.Add(sw.ElapsedTicks);
+                Thread.Sleep(10);
                 memory.Clear();
                 output.Position = 0;
                 output.SetLength(0);
