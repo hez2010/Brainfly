@@ -6,6 +6,7 @@ using ZstdSharp;
 if (args.Length < 2)
 {
     PrintUsage();
+    return 0;
 }
 
 switch (args[0])
