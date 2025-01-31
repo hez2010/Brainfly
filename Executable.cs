@@ -38,7 +38,7 @@ class Executable
     private static string ToString(Type t, bool friendly = false)
     {
         if (!t.IsGenericType) return t.Name;
-        if (friendly && t.IsAssignableTo(typeof(INum))) return GetNumValue(t);
+        if (friendly && t.IsAssignableTo(typeof(INum<int>))) return GetNumValue(t);
         var sb = new StringBuilder();
         sb.Append($"{t.Name.AsSpan(0, t.Name.IndexOf('`'))}<");
         var cnt = 0;

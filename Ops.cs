@@ -32,7 +32,7 @@ struct Loop<Body, Next> : IOp
 }
 
 struct AddPointer<Offset, Next> : IOp
-    where Offset : INum
+    where Offset : INum<int>
     where Next : IOp
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -43,7 +43,7 @@ struct AddPointer<Offset, Next> : IOp
 }
 
 struct AddData<Data, Next> : IOp
-    where Data : INum
+    where Data : INum<int>
     where Next : IOp
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -7,9 +7,9 @@ interface IHex
     abstract static int Value { get; }
 }
 
-interface INum
+interface INum<T>
 {
-    abstract static int Value { get; }
+    abstract static T Value { get; }
 }
 
 struct Hex0 : IHex
@@ -92,7 +92,7 @@ struct HexF : IHex
     public static int Value => 15;
 }
 
-struct Int<H7, H6, H5, H4, H3, H2, H1, H0> : INum
+struct Int<H7, H6, H5, H4, H3, H2, H1, H0> : INum<int>
     where H7 : IHex
     where H6 : IHex
     where H5 : IHex
