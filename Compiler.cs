@@ -163,15 +163,20 @@ class Executable
         return Entrypoint(0, memory, input, output);
     }
 
-    public override string? ToString()
+    public override string ToString()
     {
         return ToString(_code);
     }
 
-    private static string ToString(Type t)
+    public string ToFriendlyString()
+    {
+        return ToString(_code, true);
+    }
+
+    private static string ToString(Type t, bool friendly = false)
     {
         if (!t.IsGenericType) return t.Name;
-        if (t.IsAssignableTo(typeof(INum))) return GetNumValue(t);
+        if (friendly && t.IsAssignableTo(typeof(INum))) return GetNumValue(t);
         var sb = new StringBuilder();
         sb.Append($"{t.Name.AsSpan(0, t.Name.IndexOf('`'))}<");
         var cnt = 0;
