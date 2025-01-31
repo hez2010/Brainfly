@@ -31,7 +31,7 @@ switch (args[0])
             {
                 static void Main(string[] args)
                 {
-                    int memorySize = 128;
+                    int memorySize = 1024;
                     if (args.Length > 0 && int.TryParse(args[0], out var size))
                     {
                         memorySize = size;
