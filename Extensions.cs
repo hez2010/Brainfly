@@ -5,8 +5,8 @@ namespace Brainfly;
 
 static class SpanExtensions
 {
-    internal static ref T UnsafeAt<T>(this Span<T> span, int index)
+    internal static ref T UnsafeAt<T>(this Span<T> span, int address)
     {
-        return ref Unsafe.Add(ref MemoryMarshal.GetReference(span), index);
+        return ref Unsafe.Add(ref MemoryMarshal.GetReference(span), address);
     }
 }
