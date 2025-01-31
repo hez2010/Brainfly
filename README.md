@@ -22,8 +22,8 @@ For example,
 
 ```bash
 dotnet run -c Release -- build a.bf # produce a.bfo
-dotnet run -c Release -- run 1024 a.bfo # running directly from source file a.bf is already supported
-dotnet run -c Release -- bench 1024 a.bfo # running directly from source file a.bf is already supported
+dotnet run -c Release -- run 1024 a.bfo # running directly from source file a.bf is also supported
+dotnet run -c Release -- bench 1024 a.bfo # running directly from source file a.bf is also supported
 ```
 
 You can also copy the compiled type and its type dependencies to a separate project, and run it directly, or even build it with NativeAOT:
