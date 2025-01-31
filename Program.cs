@@ -90,6 +90,8 @@ switch (args[0])
             } while (++count < 10 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || (HasAnyOutlier(execTime[^5..]) && execTimeControl.Elapsed < TimeSpan.FromSeconds(60)));
             Console.WriteLine($"Executed {execTime.Count} ops");
             RemoveOutliers(execTime);
+            var min = ToFriendlyTime(execTime.Min());
+            Console.WriteLine($"Min: {min.Value} {min.Unit}");
             var mean = ToFriendlyTime(execTime.Average());
             Console.WriteLine($"Mean: {mean.Value} {mean.Unit}");
             var stdDev = ToFriendlyTime(StdDev(execTime));
