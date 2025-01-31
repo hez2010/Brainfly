@@ -61,14 +61,14 @@ switch (args[0])
             var memory = memorySize < 128 ? stackalloc byte[128] : new byte[memorySize];
             var sw = Stopwatch.StartNew();
             var execTimeControl = Stopwatch.StartNew();
-            var execTime = new List<long>();
+            var execTime = new List<double>();
             Console.WriteLine("Warming up...");
             var count = 0;
             do
             {
                 sw.Restart();
                 program.Run(memory, input, output);
-                execTime.Add(sw.ElapsedTicks);
+                execTime.Add(sw.Elapsed.TotalNanoseconds);
                 Thread.Sleep(10);
                 memory.Clear();
                 output.Position = 0;
@@ -82,16 +82,16 @@ switch (args[0])
             {
                 sw.Restart();
                 program.Run(memory, input, output);
-                execTime.Add(sw.ElapsedTicks);
+                execTime.Add(sw.Elapsed.TotalNanoseconds);
                 memory.Clear();
                 output.Position = 0;
                 output.SetLength(0);
             } while (++count < 10 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || (HasAnyOutlier(execTime[^5..]) && execTimeControl.Elapsed < TimeSpan.FromSeconds(60)));
             Console.WriteLine($"Executed {execTime.Count} ops");
             RemoveOutliers(execTime);
-            var mean = ToFriendlyTime(execTime.Average() * TimeSpan.NanosecondsPerTick);
+            var mean = ToFriendlyTime(execTime.Average());
             Console.WriteLine($"Mean: {mean.Value} {mean.Unit}");
-            var stdDev = ToFriendlyTime(StdDev(execTime) * TimeSpan.NanosecondsPerTick);
+            var stdDev = ToFriendlyTime(StdDev(execTime));
             Console.WriteLine($"StdDev: {stdDev.Value} {stdDev.Unit}");
         }
         break;
@@ -109,14 +109,14 @@ static void PrintUsage()
     Console.WriteLine("       Brainfly bench <memory_size> <file>");
 }
 
-static double StdDev(IEnumerable<long> values)
+static double StdDev(IEnumerable<double> values)
 {
     var mean = values.Average();
     var sum = values.Sum(x => Math.Pow(x - mean, 2));
     return Math.Sqrt(sum / values.Count());
 }
 
-static void RemoveOutliers(List<long> values)
+static void RemoveOutliers(List<double> values)
 {
     var mean = values.Average();
     var stdDev = StdDev(values);
@@ -124,7 +124,7 @@ static void RemoveOutliers(List<long> values)
     Console.WriteLine($"Removed {count} {(count <= 1 ? "outlier" : "outliers")}");
 }
 
-static bool HasAnyOutlier(IEnumerable<long> values)
+static bool HasAnyOutlier(IEnumerable<double> values)
 {
     var mean = values.Average();
     var stdDev = StdDev(values);
