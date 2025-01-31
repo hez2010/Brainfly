@@ -182,7 +182,7 @@ class Executable
         foreach (var arg in t.GetGenericArguments())
         {
             if (cnt > 0) sb.Append(", ");
-            sb.Append(ToString(arg));
+            sb.Append(ToString(arg, friendly));
             cnt++;
         }
         return sb.Append('>').ToString();
