@@ -28,19 +28,6 @@ dotnet run -c Release -- run 1024 a.bfo # running directly from source file a.bf
 dotnet run -c Release -- bench 1024 a.bfo # running directly from source file a.bf is also supported
 ```
 
-You can also copy the compiled type and its type dependencies to a separate project, and run it directly, or even build it with NativeAOT:
-
-```cs
-static void Main()
-{
-    // A hello world program
-    AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex8>,Loop<AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex4>, Loop<AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex2>, AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex3>, AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex3>, AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddPointer<Int<HexF, HexF, HexF, HexF, HexF, HexF, HexF, HexC>, AddData<Int<HexF, HexF, HexF, HexF, HexF, HexF, HexF, HexF>, Stop>>>>>>>>>>, AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddData<Int<HexF, HexF, HexF, HexF, HexF, HexF, HexF, HexF>, AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex2>, AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, Loop<AddPointer<Int<HexF, HexF, HexF, HexF, HexF, HexF, HexF, HexF>, Stop>, AddPointer<Int<HexF, HexF, HexF, HexF, HexF, HexF, HexF, HexF>, AddData<Int<HexF, HexF, HexF, HexF, HexF, HexF, HexF, HexF>, Stop>>>>>>>>>>>>>>, AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex2>, OutputData<AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddData<Int<HexF, HexF, HexF, HexF, HexF, HexF, HexF, HexD>, OutputData<AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex7>, OutputData<OutputData<AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex3>, OutputData<AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex2>, OutputData<AddPointer<Int<HexF, HexF, HexF, HexF, HexF, HexF, HexF, HexF>, AddData<Int<HexF, HexF, HexF, HexF, HexF, HexF, HexF, HexF>, OutputData<AddPointer<Int<HexF, HexF, HexF, HexF, HexF, HexF, HexF, HexF>, OutputData<AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex3>, OutputData<AddData<Int<HexF, HexF, HexF, HexF, HexF, HexF, HexF, HexA>, OutputData<AddData<Int<HexF, HexF, HexF, HexF, HexF, HexF, HexF, Hex8>, OutputData<AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex2>, AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, OutputData<AddPointer<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex1>, AddData<Int<Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex0, Hex2>, OutputData<Stop>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        .Run(0, stackalloc byte[16], Console.OpenStandardInput(), Console.OpenStandardOutput());
-}
-
-// Pulling other type dependencies here
-```
-
 ## Benchmarks
 
 ### Mandelbrot
