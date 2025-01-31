@@ -43,7 +43,7 @@ static void Main()
 
 | Name | Time (ms) | Rank | Ratio |
 | --- | --- | --- | --- |
-| C interpreter | 4,874.6587 | 5 | 5.59 |
+| Interpreter in C | 4,874.6587 | 5 | 5.59 |
 | GCC | 901.0225 | 3 | 1.03 |
 | Clang | 881.7177 | 2 | 1.01 |
 | .NET JIT | 925.1596 | 4 | 1.06 |
