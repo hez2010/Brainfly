@@ -84,6 +84,7 @@ switch (args[0])
                 execTime.Add(sw.ElapsedTicks);
                 memory.Clear();
             } while (++count < 10 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || (HasAnyOutlier(execTime[^5..]) && execTimeControl.Elapsed < TimeSpan.FromSeconds(60)));
+            Console.WriteLine($"Executed {execTime.Count} ops");
             RemoveOutliers(execTime);
             var mean = ToFriendlyTime(execTime.Average() * TimeSpan.NanosecondsPerTick);
             Console.WriteLine($"Mean: {mean.Value} {mean.Unit}");
