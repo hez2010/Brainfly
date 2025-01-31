@@ -43,10 +43,10 @@ static void Main()
 
 ### Mandelbrot
 
-| Name | Time (ms) | Rank | Ratio |
-| --- | --- | --- | --- |
-| Interpreter in C | 4,874.6587 | 5 | 5.59 |
-| GCC | 901.0225 | 3 | 1.03 |
-| Clang | 881.7177 | 2 | 1.01 |
-| .NET JIT | 925.1596 | 4 | 1.06 |
-| .NET AOT | **872.2287** | 1 | 1.00 |
+| Name | Time (ms) | Rank | Ratio | Binary size | Description |
+| --- | --- | --- | --- | --- | --- |
+| Interpreter in C | 4,874.6587 | 5 | 5.59 | N/A | A Brainfuck interpreter written in C |
+| GCC | 901.0225 | 3 | 1.03 | **52 KB** | Translate to C, then build with `gcc -O3 -march=native` |
+| Clang | 881.7177 | 2 | 1.01 | 56 KB | Translate to C, then build with `clang -O3 -march=native` |
+| .NET JIT | 925.1596 | 4 | 1.06 | N/A | Use JIT to generate the type and then instantiate it for running |
+| .NET AOT | **872.2287** | 1 | 1.00 | 1732 KB | Use .NET NativeAOT to build the exe that runs the compiled type directly |
