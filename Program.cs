@@ -72,7 +72,7 @@ switch (args[0])
                 memory.Clear();
                 output.Position = 0;
                 output.SetLength(0);
-            } while (++count < 10 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || HasAnyOutlier(execTime[^5..]));
+            } while (++count < 10 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || (HasAnyOutlier(execTime[^5..]) && execTimeControl.Elapsed < TimeSpan.FromSeconds(60)));
             execTime.Clear();
             Console.WriteLine("Benchmarking...");
             execTimeControl.Restart();
@@ -83,10 +83,12 @@ switch (args[0])
                 program.Run(memory, input, output);
                 execTime.Add(sw.ElapsedTicks);
                 memory.Clear();
-            } while (++count < 10 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || HasAnyOutlier(execTime[^5..]));
+            } while (++count < 10 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || (HasAnyOutlier(execTime[^5..]) && execTimeControl.Elapsed < TimeSpan.FromSeconds(60)));
             RemoveOutliers(execTime);
-            Console.WriteLine($"Mean: {execTime.Average() * TimeSpan.NanosecondsPerTick} ns");
-            Console.WriteLine($"StdDev: {StdDev(execTime) * TimeSpan.NanosecondsPerTick} ns");
+            var mean = ToFriendlyTime(execTime.Average() * TimeSpan.NanosecondsPerTick);
+            Console.WriteLine($"Mean: {mean.Value} {mean.Unit}");
+            var stdDev = ToFriendlyTime(StdDev(execTime) * TimeSpan.NanosecondsPerTick);
+            Console.WriteLine($"StdDev: {stdDev.Value} {stdDev.Unit}");
         }
         break;
     default:
@@ -124,4 +126,39 @@ static bool HasAnyOutlier(IEnumerable<long> values)
     var stdDev = StdDev(values);
     var count = values.Count(x => Math.Abs(x - mean) > 2 * stdDev);
     return count > 0;
+}
+
+static (double Value, string Unit) ToFriendlyTime(double nanoseconds)
+{
+    if (nanoseconds < 1000)
+    {
+        return (nanoseconds, "ns");
+    }
+    var microseconds = nanoseconds / 1000;
+    if (microseconds < 1000)
+    {
+        return (microseconds, "μs");
+    }
+    var milliseconds = microseconds / 1000;
+    if (milliseconds < 1000)
+    {
+        return (milliseconds, "ms");
+    }
+    var seconds = milliseconds / 1000;
+    if (seconds < 60)
+    {
+        return (seconds, "s");
+    }
+    var minutes = seconds / 60;
+    if (minutes < 60)
+    {
+        return (minutes, "m");
+    }
+    var hours = minutes / 60;
+    if (hours < 24)
+    {
+        return (hours, "h");
+    }
+    var days = hours / 24;
+    return (days, "d");
 }
