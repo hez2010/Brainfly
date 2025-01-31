@@ -41,6 +41,8 @@ static void Main()
 
 ## Benchmarks
 
+### Mandelbrot
+
 | Name | Time (ms) | Rank | Ratio |
 | --- | --- | --- | --- |
 | Interpreter in C | 4,874.6587 | 5 | 5.59 |
