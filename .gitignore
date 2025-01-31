@@ -10,8 +10,6 @@
 *.userosscache
 *.sln.docstates
 *.bfo
-*.bft
-*.bftf
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
