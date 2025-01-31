@@ -39,8 +39,9 @@ switch (args[0])
             await using var output = Console.OpenStandardOutput();
             await using var input = Console.OpenStandardInput();
             var memory = memorySize < 128 ? stackalloc byte[128] : new byte[memorySize];
-            return program.Run(memory, input, output);
+            program.Run(memory, input, output);
         }
+        break;
     case "bench":
         {
             var memorySize = int.Parse(args[1]);
