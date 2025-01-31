@@ -62,8 +62,7 @@ class Compiler
         var stack = new Stack<List<Instruction>>();
         stack.Push([]);
 
-        int length = code.Length;
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < code.Length; i++)
         {
             var c = code[i];
             switch (c)
@@ -72,7 +71,7 @@ class Compiler
                 case '<':
                     {
                         int count = 1;
-                        while (i + 1 < length && code[i + 1] == c)
+                        while (i + 1 < code.Length && code[i + 1] == c)
                         {
                             count++;
                             i++;
@@ -86,7 +85,7 @@ class Compiler
                 case '-':
                     {
                         int count = 1;
-                        while (i + 1 < length && code[i + 1] == c)
+                        while (i + 1 < code.Length && code[i + 1] == c)
                         {
                             count++;
                             i++;
