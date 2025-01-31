@@ -136,4 +136,177 @@ class Compiler
 
         return code;
     }
+
+    internal static string GetDependencySource()
+    {
+        return """
+        static class SpanExtensions
+        {
+            internal static ref T UnsafeAt<T>(this Span<T> span, int address)
+            {
+                return ref Unsafe.Add(ref MemoryMarshal.GetReference(span), address);
+            }
+        }
+        interface IHex
+        {
+            abstract static int Value { get; }
+        }
+        interface INum
+        {
+            abstract static int Value { get; }
+        }
+        struct Hex0 : IHex
+        {
+            public static int Value => 0;
+        }
+        struct Hex1 : IHex
+        {
+            public static int Value => 1;
+        }
+        struct Hex2 : IHex
+        {
+            public static int Value => 2;
+        }
+        struct Hex3 : IHex
+        {
+            public static int Value => 3;
+        }
+        struct Hex4 : IHex
+        {
+            public static int Value => 4;
+        }
+        struct Hex5 : IHex
+        {
+            public static int Value => 5;
+        }
+        struct Hex6 : IHex
+        {
+            public static int Value => 6;
+        }
+        struct Hex7 : IHex
+        {
+            public static int Value => 7;
+        }
+        struct Hex8 : IHex
+        {
+            public static int Value => 8;
+        }
+        struct Hex9 : IHex
+        {
+            public static int Value => 9;
+        }
+        struct HexA : IHex
+        {
+            public static int Value => 10;
+        }
+        struct HexB : IHex
+        {
+            public static int Value => 11;
+        }
+        struct HexC : IHex
+        {
+            public static int Value => 12;
+        }
+        struct HexD : IHex
+        {
+            public static int Value => 13;
+        }
+        struct HexE : IHex
+        {
+            public static int Value => 14;
+        }
+        struct HexF : IHex
+        {
+            public static int Value => 15;
+        }
+        struct Int<H7, H6, H5, H4, H3, H2, H1, H0> : INum
+            where H7 : IHex
+            where H6 : IHex
+            where H5 : IHex
+            where H4 : IHex
+            where H3 : IHex
+            where H2 : IHex
+            where H1 : IHex
+            where H0 : IHex
+        {
+            public static int Value
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => H7.Value << 28 | H6.Value << 24 | H5.Value << 20 | H4.Value << 16 | H3.Value << 12 | H2.Value << 8 | H1.Value << 4 | H0.Value;
+            }
+        }
+        interface IOp
+        {
+            abstract static int Run(int address, Span<byte> memory, Stream input, Stream output);
+        }
+        struct Stop : IOp
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static int Run(int address, Span<byte> memory, Stream input, Stream output)
+            {
+                return address;
+            }
+        }
+        struct Loop<Body, Next> : IOp
+            where Body : IOp
+            where Next : IOp
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static int Run(int address, Span<byte> memory, Stream input, Stream output)
+            {
+                while (memory.UnsafeAt(address) != 0)
+                {
+                    address = Body.Run(address, memory, input, output);
+                }
+                return Next.Run(address, memory, input, output);
+            }
+        }
+        struct AddPointer<Offset, Next> : IOp
+            where Offset : INum
+            where Next : IOp
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static int Run(int address, Span<byte> memory, Stream input, Stream output)
+            {
+                return Next.Run(address + Offset.Value, memory, input, output);
+            }
+        }
+        struct AddData<Data, Next> : IOp
+            where Data : INum
+            where Next : IOp
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static int Run(int address, Span<byte> memory, Stream input, Stream output)
+            {
+                memory.UnsafeAt(address) += (byte)Data.Value;
+                return Next.Run(address, memory, input, output);
+            }
+        }
+        struct OutputData<Next> : IOp
+            where Next : IOp
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static int Run(int address, Span<byte> memory, Stream input, Stream output)
+            {
+                output.WriteByte(memory.UnsafeAt(address));
+                return Next.Run(address, memory, input, output);
+            }
+        }
+        struct InputData<Next> : IOp
+            where Next : IOp
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static int Run(int address, Span<byte> memory, Stream input, Stream output)
+            {
+                var data = input.ReadByte();
+                if (data == -1)
+                {
+                    return address;
+                }
+                memory.UnsafeAt(address) = (byte)data;
+                return Next.Run(address, memory, input, output);
+            }
+        }
+        """;
+    }
 }

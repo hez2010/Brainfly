@@ -15,9 +15,35 @@ switch (args[0])
         {
             var program = Compiler.Compile(await File.ReadAllTextAsync(args[1]));
             using var compressor = new Compressor();
-            await File.WriteAllBytesAsync(Path.GetFileNameWithoutExtension(args[1]) + ".type.txt", Encoding.UTF8.GetBytes(program.ToString()));
-            await File.WriteAllBytesAsync(Path.GetFileNameWithoutExtension(args[1]) + ".type.friendly.txt", Encoding.UTF8.GetBytes(program.ToFriendlyString()));
             await File.WriteAllBytesAsync(Path.GetFileNameWithoutExtension(args[1]) + ".bfo", compressor.Wrap(Encoding.UTF8.GetBytes(program.Code.ToString())).ToArray());
+        }
+        break;
+    case "bundle":
+        {
+            var program = Compiler.Compile(await File.ReadAllTextAsync(args[1]));
+            await File.WriteAllTextAsync(Path.GetFileNameWithoutExtension(args[1]) + ".cs", $$"""
+            using System;
+            using System.Runtime.CompilerServices;
+            using System.Runtime.InteropServices;
+            using System.IO;
+            
+            class Program
+            {
+                static void Main(string[] args)
+                {
+                    int memorySize = 128;
+                    if (args.Length > 0 && int.TryParse(args[0], out var size))
+                    {
+                        memorySize = size;
+                    }
+
+                    {{program}}
+                        .Run(0, memorySize <= 128 ? stackalloc byte[128] : new byte[memorySize], Console.OpenStandardInput(), Console.OpenStandardOutput());
+                }
+            }
+
+            {{Compiler.GetDependencySource()}}
+            """);
         }
         break;
     case "run":
@@ -38,7 +64,7 @@ switch (args[0])
             Console.OutputEncoding = Encoding.UTF8;
             await using var output = Console.OpenStandardOutput();
             await using var input = Console.OpenStandardInput();
-            var memory = memorySize < 128 ? stackalloc byte[128] : new byte[memorySize];
+            var memory = memorySize <= 128 ? stackalloc byte[128] : new byte[memorySize];
             program.Run(memory, input, output);
         }
         break;
@@ -59,7 +85,7 @@ switch (args[0])
             Console.OutputEncoding = Encoding.UTF8;
             await using var output = new MemoryStream();
             await using var input = new MemoryStream();
-            var memory = memorySize < 128 ? stackalloc byte[128] : new byte[memorySize];
+            var memory = memorySize <= 128 ? stackalloc byte[128] : new byte[memorySize];
             var sw = Stopwatch.StartNew();
             var execTimeControl = Stopwatch.StartNew();
             var execTime = new List<double>();
@@ -108,6 +134,7 @@ return 0;
 static void PrintUsage()
 {
     Console.WriteLine("Usage: Brainfly build <file>");
+    Console.WriteLine("       Brainfly bundle <file>");
     Console.WriteLine("       Brainfly run <memory_size> <file>");
     Console.WriteLine("       Brainfly bench <memory_size> <file>");
 }

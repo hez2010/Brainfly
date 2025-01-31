@@ -14,6 +14,7 @@ dotnet build -c Release
 
 ```bash
 dotnet run -c Release -- build <file>
+dotnet run -c Release -- bundle <file>
 dotnet run -c Release -- run <memory_size> <file>
 dotnet run -c Release -- bench <memory_size> <file>
 ```
@@ -22,6 +23,7 @@ For example,
 
 ```bash
 dotnet run -c Release -- build a.bf # produce a.bfo
+dotnet run -c Release -- bundle a.bf # produce a self-contained a.cs so that you can run it directly with .NET or build it with .NET NativeAOT
 dotnet run -c Release -- run 1024 a.bfo # running directly from source file a.bf is also supported
 dotnet run -c Release -- bench 1024 a.bfo # running directly from source file a.bf is also supported
 ```
