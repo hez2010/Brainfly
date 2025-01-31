@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 using Brainfly;
+using ZstdSharp;
 
 if (args.Length < 2)
 {
@@ -12,13 +13,15 @@ switch (args[0])
     case "build":
         {
             var program = Compiler.Compile(await File.ReadAllTextAsync(args[1]));
-            await File.WriteAllTextAsync(Path.GetFileNameWithoutExtension(args[1]) + ".o", program.Code.ToString());
+            using var compressor = new Compressor();
+            await File.WriteAllBytesAsync(Path.GetFileNameWithoutExtension(args[1]) + ".o", compressor.Wrap(Encoding.UTF8.GetBytes(program.Code.ToString())).ToArray());
         }
         break;
     case "run":
         {
             var memorySize = int.Parse(args[1]);
-            var program = new Executable(Type.GetType(await File.ReadAllTextAsync(args[2]))!);
+            using var decompressor = new Decompressor();
+            var program = new Executable(Type.GetType(Encoding.UTF8.GetString(decompressor.Unwrap(await File.ReadAllBytesAsync(args[2]))))!);
             Console.OutputEncoding = Encoding.UTF8;
             var output = Console.OpenStandardOutput();
             var input = Console.OpenStandardInput();
@@ -28,7 +31,8 @@ switch (args[0])
     case "bench":
         {
             var memorySize = int.Parse(args[1]);
-            var program = new Executable(Type.GetType(await File.ReadAllTextAsync(args[2]))!);
+            using var decompressor = new Decompressor();
+            var program = new Executable(Type.GetType(Encoding.UTF8.GetString(decompressor.Unwrap(await File.ReadAllBytesAsync(args[2]))))!);
             Console.OutputEncoding = Encoding.UTF8;
             var output = new MemoryStream();
             var input = Console.OpenStandardInput();
