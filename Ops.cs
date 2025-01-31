@@ -23,7 +23,7 @@ struct Loop<Body, Next> : IOp
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int Run(int index, Span<byte> memory, Stream input, Stream output)
     {
-        while (memory[index] != 0)
+        while (memory.UnsafeAt(index) != 0)
         {
             index = Body.Run(index, memory, input, output);
         }
@@ -49,7 +49,7 @@ struct AddData<Data, Next> : IOp
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int Run(int index, Span<byte> memory, Stream input, Stream output)
     {
-        memory[index] += (byte)Data.Value;
+        memory.UnsafeAt(index) += (byte)Data.Value;
         return Next.Run(index, memory, input, output);
     }
 }
@@ -60,7 +60,7 @@ struct OutputData<Next> : IOp
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int Run(int index, Span<byte> memory, Stream input, Stream output)
     {
-        output.WriteByte(memory[index]);
+        output.WriteByte(memory.UnsafeAt(index));
         return Next.Run(index, memory, input, output);
     }
 }
@@ -76,7 +76,7 @@ struct InputData<Next> : IOp
         {
             return index;
         }
-        memory[index] = (byte)data;
+        memory.UnsafeAt(index) = (byte)data;
         return Next.Run(index, memory, input, output);
     }
 }

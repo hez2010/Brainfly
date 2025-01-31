@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Brainfly;
 using ZstdSharp;
@@ -59,35 +60,33 @@ switch (args[0])
             await using var input = new MemoryStream();
             var memory = memorySize < 128 ? stackalloc byte[128] : new byte[memorySize];
             var sw = Stopwatch.StartNew();
+            var execTimeControl = Stopwatch.StartNew();
             var execTime = new List<long>();
             Console.WriteLine("Warming up...");
             var count = 0;
             do
             {
-                Console.Write($"Warmup #{++count}...");
                 sw.Restart();
                 program.Run(memory, input, output);
                 execTime.Add(sw.ElapsedTicks);
                 memory.Clear();
                 output.Position = 0;
                 output.SetLength(0);
-                Console.WriteLine($" {TimeSpan.FromTicks(execTime.Last()).TotalNanoseconds} ns");
-            } while (count < 5 || (StdDev(execTime[^5..]) > 20000 && count < 30));
+            } while (++count < 5 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || HasAnyOutlier(execTime[^5..]));
             execTime.Clear();
             Console.WriteLine("Benchmarking...");
+            execTimeControl.Restart();
             count = 0;
             do
             {
-                Console.Write($"Run #{++count}...");
                 sw.Restart();
                 program.Run(memory, input, output);
                 execTime.Add(sw.ElapsedTicks);
                 memory.Clear();
-                Console.WriteLine($" {TimeSpan.FromTicks(execTime.Last()).TotalNanoseconds} ns");
-            } while (count < 5 || (StdDev(execTime[^5..]) > 20000 && count < 30));
+            } while (++count < 5 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || HasAnyOutlier(execTime[^5..]));
             RemoveOutliers(execTime);
-            Console.WriteLine($"Mean: {TimeSpan.FromTicks((long)execTime.Average()).TotalNanoseconds} ns");
-            Console.WriteLine($"StdDev: {TimeSpan.FromTicks((long)StdDev(execTime)).TotalNanoseconds} ns");
+            Console.WriteLine($"Mean: {execTime.Average() * TimeSpan.NanosecondsPerTick} ns");
+            Console.WriteLine($"StdDev: {StdDev(execTime) * TimeSpan.NanosecondsPerTick} ns");
         }
         break;
     default:
@@ -116,5 +115,13 @@ static void RemoveOutliers(List<long> values)
     var mean = values.Average();
     var stdDev = StdDev(values);
     var count = values.RemoveAll(x => Math.Abs(x - mean) > 2 * stdDev);
-    Console.WriteLine($"Removed {count} {(count <= 1 ? "outlier" : "outliers")}.");
+    Console.WriteLine($"Removed {count} {(count <= 1 ? "outlier" : "outliers")}");
+}
+
+static bool HasAnyOutlier(IEnumerable<long> values)
+{
+    var mean = values.Average();
+    var stdDev = StdDev(values);
+    var count = values.Count(x => Math.Abs(x - mean) > 2 * stdDev);
+    return count > 0;
 }
