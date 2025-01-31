@@ -32,6 +32,7 @@ switch (args[0])
             {
                 program = Compiler.Compile(await File.ReadAllTextAsync(args[2]));
             }
+            Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;
             await using var output = Console.OpenStandardOutput();
             await using var input = Console.OpenStandardInput();
