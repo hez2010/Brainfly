@@ -15,6 +15,7 @@ switch (args[0])
         {
             var program = Compiler.Compile(await File.ReadAllTextAsync(args[1]));
             using var compressor = new Compressor();
+            await File.WriteAllBytesAsync(Path.GetFileNameWithoutExtension(args[1]) + ".bft", Encoding.UTF8.GetBytes(program.Code.ToString()));
             await File.WriteAllBytesAsync(Path.GetFileNameWithoutExtension(args[1]) + ".bfo", compressor.Wrap(Encoding.UTF8.GetBytes(program.Code.ToString())).ToArray());
         }
         break;
