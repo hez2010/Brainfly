@@ -70,28 +70,26 @@ class Compiler
                 case '>':
                 case '<':
                     {
-                        int count = 1;
-                        while (i + 1 < code.Length && code[i + 1] == c)
+                        int offset = 0;
+                        while (i < code.Length && code[i] is '>' or '<')
                         {
-                            count++;
+                            offset += (code[i] == '>') ? 1 : -1;
                             i++;
                         }
-
-                        var offset = (c == '>') ? count : -count;
+                        i--;
                         stack.Peek().Add(new MovePointer(offset));
                         break;
                     }
                 case '+':
                 case '-':
                     {
-                        int count = 1;
-                        while (i + 1 < code.Length && code[i + 1] == c)
+                        int delta = 0;
+                        while (i < code.Length && code[i] == c)
                         {
-                            count++;
+                            delta += (c == '+') ? 1 : -1;
                             i++;
                         }
-
-                        var delta = (c == '+') ? count : -count;
+                        i--;
                         stack.Peek().Add(new AddData(delta));
                         break;
                     }
