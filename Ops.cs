@@ -71,7 +71,12 @@ struct InputData<Next> : IOp
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int Run(int index, Span<byte> memory, Stream input, Stream output)
     {
-        memory[index] = (byte)input.ReadByte();
+        var data = input.ReadByte();
+        if (data == -1)
+        {
+            return index;
+        }
+        memory[index] = (byte)data;
         return Next.Run(index, memory, input, output);
     }
 }
