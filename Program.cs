@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using TypedBFSharp;
+using Brainfly;
 
 var mandelbrot = """
 +++++++++++++[->++>>>+++++>++>+<<<<<<]>>>>>++++++>--->>>>>>>>>>+++++++++++++++[[

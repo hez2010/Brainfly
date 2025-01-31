@@ -1,4 +1,4 @@
-# TypedBFSharp
+# Brainfly
 
 A Brainfuck JIT compiler built on top of C# and .NET.
 

@@ -1,4 +1,4 @@
-namespace TypedBFSharp;
+namespace Brainfly;
 
 using System.Runtime.CompilerServices;
 

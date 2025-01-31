@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace TypedBFSharp;
+namespace Brainfly;
 
 interface IOp
 {

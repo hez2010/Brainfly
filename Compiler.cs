@@ -1,7 +1,7 @@
 using System.Text;
-using static TypedBFSharp.Compiler.Instruction;
+using static Brainfly.Compiler.Instruction;
 
-namespace TypedBFSharp;
+namespace Brainfly;
 
 class Compiler
 {
