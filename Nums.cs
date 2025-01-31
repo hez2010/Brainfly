@@ -92,19 +92,19 @@ struct HexF : IHex
     public static int Value => 15;
 }
 
-struct Int<Hex7, Hex6, Hex5, Hex4, Hex3, Hex2, Hex1, Hex0> : INum
-    where Hex7 : IHex
-    where Hex6 : IHex
-    where Hex5 : IHex
-    where Hex4 : IHex
-    where Hex3 : IHex
-    where Hex2 : IHex
-    where Hex1 : IHex
-    where Hex0 : IHex
+struct Int<H7, H6, H5, H4, H3, H2, H1, H0> : INum
+    where H7 : IHex
+    where H6 : IHex
+    where H5 : IHex
+    where H4 : IHex
+    where H3 : IHex
+    where H2 : IHex
+    where H1 : IHex
+    where H0 : IHex
 {
     public static int Value
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => Hex7.Value << 28 | Hex6.Value << 24 | Hex5.Value << 20 | Hex4.Value << 16 | Hex3.Value << 12 | Hex2.Value << 8 | Hex1.Value << 4 | Hex0.Value;
+        get => H7.Value << 28 | H6.Value << 24 | H5.Value << 20 | H4.Value << 16 | H3.Value << 12 | H2.Value << 8 | H1.Value << 4 | H0.Value;
     }
 }
