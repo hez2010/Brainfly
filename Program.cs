@@ -72,7 +72,7 @@ switch (args[0])
                 memory.Clear();
                 output.Position = 0;
                 output.SetLength(0);
-            } while (++count < 5 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || HasAnyOutlier(execTime[^5..]));
+            } while (++count < 10 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || HasAnyOutlier(execTime[^5..]));
             execTime.Clear();
             Console.WriteLine("Benchmarking...");
             execTimeControl.Restart();
@@ -83,7 +83,7 @@ switch (args[0])
                 program.Run(memory, input, output);
                 execTime.Add(sw.ElapsedTicks);
                 memory.Clear();
-            } while (++count < 5 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || HasAnyOutlier(execTime[^5..]));
+            } while (++count < 10 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || HasAnyOutlier(execTime[^5..]));
             RemoveOutliers(execTime);
             Console.WriteLine($"Mean: {execTime.Average() * TimeSpan.NanosecondsPerTick} ns");
             Console.WriteLine($"StdDev: {StdDev(execTime) * TimeSpan.NanosecondsPerTick} ns");
