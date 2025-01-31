@@ -83,6 +83,8 @@ switch (args[0])
                 program.Run(memory, input, output);
                 execTime.Add(sw.ElapsedTicks);
                 memory.Clear();
+                output.Position = 0;
+                output.SetLength(0);
             } while (++count < 10 || execTimeControl.Elapsed < TimeSpan.FromSeconds(10) || (HasAnyOutlier(execTime[^5..]) && execTimeControl.Elapsed < TimeSpan.FromSeconds(60)));
             Console.WriteLine($"Executed {execTime.Count} ops");
             RemoveOutliers(execTime);
