@@ -13,8 +13,7 @@ dotnet build -c Release
 ## Usage
 
 ```bash
-dotnet run -c Release -- build <file>
-dotnet run -c Release -- bundle <file>
+dotnet run -c Release -- build <memory_size> <file>
 dotnet run -c Release -- run <memory_size> <file>
 dotnet run -c Release -- bench <memory_size> <file>
 ```
@@ -22,7 +21,7 @@ dotnet run -c Release -- bench <memory_size> <file>
 For example,
 
 ```bash
-dotnet run -c Release -- build a.bf # produce a self-contained a.cs so that you can run it directly with .NET or build it with .NET NativeAOT, you can pass the memory size in the first argument when you run the generated program
+dotnet run -c Release -- build 1024 a.bf # produce a self-contained a.cs so that you can run it directly with .NET or build it with .NET NativeAOT
 dotnet run -c Release -- run 1024 a.bf # running directly from source file a.bf
 dotnet run -c Release -- bench 1024 a.bf # benchmark directly from source file a.bf
 ```

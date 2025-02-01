@@ -2,7 +2,7 @@
 using System.Text;
 using Brainfly;
 
-if (args.Length < 2)
+if (args.Length < 3)
 {
     PrintUsage();
     return 0;
@@ -12,8 +12,9 @@ switch (args[0])
 {
     case "build":
         {
-            var program = Compiler.Compile(await File.ReadAllTextAsync(args[1]));
-            await File.WriteAllTextAsync(Path.GetFileNameWithoutExtension(args[1]) + ".cs", $$"""
+            var memorySize = int.Parse(args[1]);
+            var program = Compiler.Compile(await File.ReadAllTextAsync(args[2]));
+            await File.WriteAllTextAsync(Path.GetFileNameWithoutExtension(args[2]) + ".cs", $$"""
             using System;
             using System.Runtime.CompilerServices;
             using System.Runtime.InteropServices;
@@ -23,14 +24,8 @@ switch (args[0])
             {
                 static void Main(string[] args)
                 {
-                    int memorySize = 1024;
-                    if (args.Length > 0 && int.TryParse(args[0], out var size))
-                    {
-                        memorySize = size;
-                    }
-
                     {{program}}
-                        .Run(0, memorySize <= 128 ? stackalloc byte[128] : new byte[memorySize], Console.OpenStandardInput(), Console.OpenStandardOutput());
+                        .Run(0, {{(memorySize <= 128 ? "stackalloc byte[128]" : "new byte[memorySize]")}}, Console.OpenStandardInput(), Console.OpenStandardOutput());
                 }
             }
 
@@ -41,7 +36,6 @@ switch (args[0])
     case "run":
         {
             var memorySize = int.Parse(args[1]);
-            var extName = Path.GetExtension(args[2]);
             var program = Compiler.Compile(await File.ReadAllTextAsync(args[2]));
             Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;
@@ -54,7 +48,6 @@ switch (args[0])
     case "bench":
         {
             var memorySize = int.Parse(args[1]);
-            var extName = Path.GetExtension(args[2]);
             var program = Compiler.Compile(await File.ReadAllTextAsync(args[2]));
             Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;
