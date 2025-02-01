@@ -97,7 +97,7 @@ return 0;
 
 static void PrintUsage()
 {
-    Console.WriteLine("Usage: Brainfly build <file>");
+    Console.WriteLine("Usage: Brainfly build <memory_size> <file>");
     Console.WriteLine("       Brainfly run <memory_size> <file>");
     Console.WriteLine("       Brainfly bench <memory_size> <file>");
 }
