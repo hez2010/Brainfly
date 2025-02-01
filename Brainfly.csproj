@@ -7,8 +7,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ZstdSharp.Port" Version="0.8.4" />
-  </ItemGroup>
-
 </Project>

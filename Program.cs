@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
 using Brainfly;
-using ZstdSharp;
 
 if (args.Length < 2)
 {
@@ -12,13 +11,6 @@ if (args.Length < 2)
 switch (args[0])
 {
     case "build":
-        {
-            var program = Compiler.Compile(await File.ReadAllTextAsync(args[1]));
-            using var compressor = new Compressor();
-            await File.WriteAllBytesAsync(Path.GetFileNameWithoutExtension(args[1]) + ".bfo", compressor.Wrap(Encoding.UTF8.GetBytes(program.Code.ToString())).ToArray());
-        }
-        break;
-    case "bundle":
         {
             var program = Compiler.Compile(await File.ReadAllTextAsync(args[1]));
             await File.WriteAllTextAsync(Path.GetFileNameWithoutExtension(args[1]) + ".cs", $$"""
@@ -50,16 +42,7 @@ switch (args[0])
         {
             var memorySize = int.Parse(args[1]);
             var extName = Path.GetExtension(args[2]);
-            Executable program;
-            if (string.Equals(extName, ".bfo", StringComparison.OrdinalIgnoreCase))
-            {
-                using var decompressor = new Decompressor();
-                program = new Executable(Type.GetType(Encoding.UTF8.GetString(decompressor.Unwrap(await File.ReadAllBytesAsync(args[2]))))!);
-            }
-            else
-            {
-                program = Compiler.Compile(await File.ReadAllTextAsync(args[2]));
-            }
+            var program = Compiler.Compile(await File.ReadAllTextAsync(args[2]));
             Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;
             await using var output = Console.OpenStandardOutput();
@@ -72,16 +55,7 @@ switch (args[0])
         {
             var memorySize = int.Parse(args[1]);
             var extName = Path.GetExtension(args[2]);
-            Executable program;
-            if (string.Equals(extName, ".bfo", StringComparison.OrdinalIgnoreCase))
-            {
-                using var decompressor = new Decompressor();
-                program = new Executable(Type.GetType(Encoding.UTF8.GetString(decompressor.Unwrap(await File.ReadAllBytesAsync(args[2]))))!);
-            }
-            else
-            {
-                program = Compiler.Compile(await File.ReadAllTextAsync(args[2]));
-            }
+            var program = Compiler.Compile(await File.ReadAllTextAsync(args[2]));
             Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;
             await using var output = Console.OpenStandardOutput();
@@ -131,7 +105,6 @@ return 0;
 static void PrintUsage()
 {
     Console.WriteLine("Usage: Brainfly build <file>");
-    Console.WriteLine("       Brainfly bundle <file>");
     Console.WriteLine("       Brainfly run <memory_size> <file>");
     Console.WriteLine("       Brainfly bench <memory_size> <file>");
 }
