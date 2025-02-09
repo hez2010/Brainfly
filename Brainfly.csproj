@@ -5,6 +5,14 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Authors>hez2010</Authors>
+    <Description>Brainfly: A Brainfuck compiler</Description>
+    <Version>1.0.0.0</Version>
+    <AssemblyName>Brainfly</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <TrimmerRootAssembly Include="Brainfly" />
+  </ItemGroup>
 
 </Project>
