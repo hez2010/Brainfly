@@ -1,4 +1,4 @@
-# Brainfly: A high-performance Brainf**k JIT and AOT compiler built on top of C# and .NET
+# Brainfly: A high-performance Brainf**k JIT and AOT compiler built on top of C# type system
 
 Originally inspired by [BrainFlood: Runtime code generation via reflection in .NET](https://sbox.game/churchofmiku/brainflood/news/brainflood-compiling-via-reflection-8089c180), here we built a new compiler from scratch and adopted the latest .NET type system features and fully leveraged the optimizations provided by .NET.
 

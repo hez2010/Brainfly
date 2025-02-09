@@ -1,6 +1,6 @@
 # Brainfly
 
-A Brainf**k JIT and AOT compiler built on top of C# and .NET.
+A Brainf**k JIT and AOT compiler built on top of C# type system.
 
 Leveraged .NET generic type system and abstract static interface methods to achieve great performance.
 
