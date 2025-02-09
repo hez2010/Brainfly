@@ -4,6 +4,8 @@ A Brainf**k JIT and AOT compiler built on top of C# type system.
 
 Leveraged .NET generic type system and abstract static interface methods to achieve great performance.
 
+See [Introduction](Intro.md) for details.
+
 ## Build
 
 ```bash
