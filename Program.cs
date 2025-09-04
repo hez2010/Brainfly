@@ -25,7 +25,7 @@ switch (args[0])
                 static void Main(string[] args)
                 {
                     {{program}}
-                        .Run(0, {{(memorySize <= 128 ? "stackalloc byte[128]" : "new byte[memorySize]")}}, Console.OpenStandardInput(), Console.OpenStandardOutput());
+                        .Run(0, {{(memorySize <= 128 ? "stackalloc byte[128]" : "new byte[{memorySize}]")}}, Console.OpenStandardInput(), Console.OpenStandardOutput());
                 }
             }
 
@@ -159,3 +159,4 @@ static (double Value, string Unit) ToFriendlyTime(double nanoseconds)
     var days = hours / 24;
     return (days, "d");
 }
+
